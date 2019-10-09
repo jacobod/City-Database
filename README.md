@@ -84,7 +84,7 @@ The database will consist of the following tables:
 
 This model was chosen so that we are able to affiliate these different data sources with a single field (City_ID) which serves as the join key.
 Each table was also set up to ensure no duplicate information across other tables in the database.
-The airports file was split into US and International tables due to the US having States, and the International table having Countries. Each of those fields would be out of place together. Having the US airports be its own table also allows for the use to key in on US specific information without having to filter out International rows.
+The airports file was split into US and International tables due to the US having States, and the International table having Countries. Each of those fields would be out of place together. Having the US airports be its own table also allows for the user to key in on US-specific data without having to filter out International rows.
 
 In general, you can use City_ID when present to join across tables. The only tables without it are immigration and the immigration port/countries tables.
 To join other tables with immigration tables, use the Port_ID in the cities table as the mapping to City_ID. Not all cities in the database have immigration data.
