@@ -101,23 +101,21 @@ The airports data can change if new airports go into business or others close- t
 
 ## 5) How Would Approach this problem under the following scenarios:
 
-## 5) How Would Approach this problem under the following scenarios:
-
 **a) If the data was increased by 100x**
 
-    The ETL processes (with the exception of immigration) would have to be transitioned from using pandas to mainly using PySpark.
-    I'd add code as part of the pipeline that would spin up an EMR cluster, and rebuild the operators to use Spark, just like the SparksToRedshiftOperator.
+The ETL processes (with the exception of immigration) would have to be transitioned from using pandas to mainly using PySpark.
+I'd add code as part of the pipeline that would spin up an EMR cluster, and rebuild the operators to use Spark, just like the SparksToRedshiftOperator.
 
 
 **b) If the pipelines were run on a daily basis by 7am**
     
-    As I built the pipeline in Airflow, all we would have to do is schedule the the pipeline to run sometime before 7, perhaps at 1 AM.
-    I'd also add in settings to prevent the processing from continuing past 7 AM or after some interval (1 hour for example) and log it.
+As I built the pipeline in Airflow, all we would have to do is schedule the the pipeline to run sometime before 7, perhaps at 1 AM.
+I'd also add in settings to prevent the processing from continuing past 7 AM or after some interval (1 hour for example) and log it.
 
 
 **c) If the database needed to be accessed by 100+ people**
 
-    The final database is Redshift, so if there were 100+ users accessing it at once, we might have to spin up a larger cluster that could handle that volume.
-    That process is simple- AWS lets you scale up or down clusters using the same settings, but we'd have to take backups first. 
+ The final database is Redshift, so if there were 100+ users accessing it at once, we might have to spin up a larger cluster that could handle that volume.
+That process is simple- AWS lets you scale up or down clusters using the same settings, but we'd have to take backups first. 
 
 
