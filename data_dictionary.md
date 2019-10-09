@@ -1,4 +1,4 @@
-# City DB Data Dictioanry
+# City DB Data Dictionary
 
 ### intl_airports:
 
