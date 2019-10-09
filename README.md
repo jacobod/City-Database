@@ -13,7 +13,7 @@ Datasets include:
     - population and demographics
     - temperature
 
-The complete database will be able to answer questions such as:
+The database will be able to answer questions such as:
 
     - is there more immigration to warmer cities?
     - are warmer cities more diverse?
@@ -57,7 +57,7 @@ Tools used in this project include:
 I use Python for all of the heavy lifting in data processing, the pandas and pyspark libraries in particular.
 Pandas makes it quick and easy to process small-medium size datasets, while PySpark does the heavy lifting for the Immigration file data processing, as it is the largest amount of record by far.
 
-##### Database Choice
+##### Database Choice - Redshift
 Redshift provides the cloud database, and while it is not free like Postgres is, query performance is quicker due to its column-based architecture. Given that none of the tables in this database will have an exorbinant amount of columns (where Redshift slows down), this is a fine choice for cloud storage.
 
 ##### Airflow - Scheduling and Pipelining
@@ -82,14 +82,24 @@ The database will consist of the following tables:
     - immigration_ports: city-name mapping for Port_ID in the immigration table.
     - immigration_countries: country-name mapping for citizen_country_id and residence_country_id cols in immigration table.
 
+This model was chosen so that we are able to affiliate these different data sources with a single field (City_ID) which serves as the join key.
+Each table was also set up to ensure no duplicate information across other tables in the database.
+The airports file was split into US and International tables due to the US having States, and the International table having Countries. Each of those fields would be out of place together. Having the US airports be its own table also allows for the use to key in on US specific information without having to filter out International rows.
+
 In general, you can use City_ID when present to join across tables. The only tables without it are immigration and the immigration port/countries tables.
 To join other tables with immigration tables, use the Port_ID in the cities table as the mapping to City_ID. Not all cities in the database have immigration data.
- 
- 
+
+
 #### Pipeline
 
 ![alt text](ProcessFlow.PNG "Pipeline in Airflow")
 
+We first create the target tables in Redshift, using the sql queries in helpers/create_tables.
+Next, we process each analytics table, with exception of city_temps and cities, after the tables have been created.
+We use the airports tables, demographics table, and the immigration ports tables to create the cities table.
+The city_temps table is then processed, using the cities table results to filter down the dataset.
+While the city_temps table is being loaded, the City_ID fields in the airports and demographics table are being updated from the cities table.
+Finally, we check to make sure the immigration and cities tables are populated. 
 
 ## 4) How Often Should the Data be Updated?
 
@@ -117,5 +127,4 @@ I'd also add in settings to prevent the processing from continuing past 7 AM or 
 
  The final database is Redshift, so if there were 100+ users accessing it at once, we might have to spin up a larger cluster that could handle that volume.
 That process is simple- AWS lets you scale up or down clusters using the same settings, but we'd have to take backups first. 
-
 
