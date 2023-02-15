@@ -125,7 +125,7 @@ ufw==0.36
 unattended-upgrades==0.1
 unicodecsv==0.14.1
 urllib3==1.25.6
-Werkzeug==0.16.0
+Werkzeug==2.2.3
 WTForms==2.2.1
 zope.deprecation==4.4.0
 zope.interface==4.3.2
